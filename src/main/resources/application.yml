@@ -1,0 +1,42 @@
+server:
+  port: 9091
+  servlet:
+    context-path: /
+
+spring:
+  thymeleaf: # ThymeleafProperties
+    prefix: classpath:/public/ # thymeleaf模板文件前缀，可以自定义文件夹如classpath:/templates/temp
+    suffix: .html # thymeleaf模板文件后缀
+    mode: HTML # 视图模板类型
+    encoding: UTF-8 # 默认视图编码格式
+    cache: true # 配置页面缓存，thymeleaf默认开启缓存，页面不能及时刷新，需要关闭
+    servlet:
+      content-type: text/html # 响应类型
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 200MB
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite:./system.db
+  sql:
+    init:
+      platform: sqlite
+      mode: always
+      schema-locations:
+        - classpath:db/init-schema.sql
+      continue-on-error: true
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /api
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    auto-mapping-behavior: full
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: mapper/*.xml
+

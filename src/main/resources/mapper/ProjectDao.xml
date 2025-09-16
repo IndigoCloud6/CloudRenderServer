@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xudri.cloudrenderserver.dao.ProjectDao">
+
+    <resultMap type="com.xudri.cloudrenderserver.entity.Project" id="ProjectMap">
+        <result property="projectId" column="project_id" jdbcType="VARCHAR"/>
+        <result property="projectName" column="project_name" jdbcType="VARCHAR"/>
+        <result property="createDate" column="create_date" jdbcType="VARCHAR"/>
+        <result property="projectContent" column="project_content" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" keyProperty="" useGeneratedKeys="true">
+        insert into main.project(project_idproject_namecreate_dateproject_content)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.projectId}#{entity.projectName}#{entity.createDate}#{entity.projectContent})
+        </foreach>
+    </insert>
+    <!-- 批量插入或按主键更新 -->
+    <insert id="insertOrUpdateBatch" keyProperty="" useGeneratedKeys="true">
+        insert into main.project(project_idproject_namecreate_dateproject_content)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.projectId}#{entity.projectName}#{entity.createDate}#{entity.projectContent})
+        </foreach>
+        on duplicate key update
+        project_id = values(project_id) project_name = values(project_name) create_date = values(create_date) project_content =
+        values(project_content)
+    </insert>
+
+</mapper>
+
