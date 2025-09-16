@@ -17,7 +17,7 @@ import java.util.List;
  * @Date 2024/5/14 8:59
  * @Version 1.0
  */
-public class ProcessManagerByPoweShell {
+public class ProcessManagerByPowerShell {
 
     public static String killProcessListByPid(String pid) {
         String command = "Stop-Process -Id "+pid+" -Force";
@@ -82,12 +82,12 @@ public class ProcessManagerByPoweShell {
     }
 
     public static void main(String[] args) {
-        JSONArray processList = ProcessManagerByPoweShell.queryProcessListByCmdKeyAndProcessName("XDTC","664339b4cc843b99adc672ff");
+        JSONArray processList = ProcessManagerByPowerShell.queryProcessListByCmdKeyAndProcessName("XDTC","664339b4cc843b99adc672ff");
         System.out.println(processList);
         for (int i = 0; i < processList.size(); i++) {
             JSONObject process = processList.getJSONObject(i);
             String processId = process.getString("ProcessId");
-            ProcessManagerByPoweShell.killProcessListByPid(processId);
+            ProcessManagerByPowerShell.killProcessListByPid(processId);
         }
     }
 }
