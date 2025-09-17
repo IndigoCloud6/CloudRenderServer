@@ -4,12 +4,13 @@ import com.xudri.cloudrenderserver.entity.PixelStreamingConfig;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static com.xudri.cloudrenderserver.util.ProcessManagerByPowerShell.killProcess;
 
 /**
  * @ClassName PixelStreamingLauncher
@@ -26,11 +27,8 @@ public class PixelStreamingLauncher {
     private final String id;
     private final String groupId;
     private Process process;
-    private Thread outputThread;
-    private Thread errorThread;
-    private Thread monitorThread;
+    private LocalDateTime launchTime;
     private final AtomicBoolean isRunning = new AtomicBoolean(false);
-    private final AtomicBoolean isShuttingDown = new AtomicBoolean(false);
     private PixelStreamingConfig config;
     private String executablePath;
 
@@ -73,12 +71,6 @@ public class PixelStreamingLauncher {
             process = processBuilder.start();
             isRunning.set(true);
 
-            // 启动输出和错误流读取线程
-            startStreamReaders();
-
-            // 启动监控线程
-            startMonitorThread();
-
             log.info("实例 {} 已启动，进程ID: {}", id, getProcessId());
             return true;
 
@@ -101,105 +93,6 @@ public class PixelStreamingLauncher {
         command.add(executablePath);
         command.addAll(config.toCommandLineArgs());
         return command;
-    }
-
-    /**
-     * 启动输出和错误流读取线程
-     */
-    private void startStreamReaders() {
-        // 标准输出流读取线程
-        outputThread = new Thread(() -> {
-            try (InputStream inputStream = process.getInputStream();
-                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    log.info("实例 {} 输出: {}", id, line);
-
-                    // 可以在这里添加特定输出的处理逻辑
-                    if (line.contains("错误") || line.contains("error") || line.contains("ERROR")) {
-                        log.warn("实例 {} 检测到错误输出: {}", id, line);
-                    }
-                }
-            } catch (IOException e) {
-                if (!"Stream closed".equals(e.getMessage()) && !isShuttingDown.get()) {
-                    log.error("实例 {} 读取输出流失败", id, e);
-                }
-            } finally {
-                log.debug("实例 {} 输出流读取线程结束", id);
-            }
-        });
-        outputThread.setName("App-Output-Reader-" + id);
-        outputThread.setDaemon(true);
-        outputThread.start();
-
-        // 错误输出流读取线程
-        errorThread = new Thread(() -> {
-            try (InputStream errorStream = process.getErrorStream();
-                 BufferedReader reader = new BufferedReader(new InputStreamReader(errorStream))) {
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    log.error("实例 {} 错误: {}", id, line);
-
-                    // 可以在这里添加特定错误处理逻辑
-                    if (line.contains("崩溃") || line.contains("crash") || line.contains("fatal")) {
-                        log.error("实例 {} 检测到可能崩溃: {}", id, line);
-                        // 可以在这里触发重启逻辑
-                    }
-                }
-            } catch (IOException e) {
-                if (!"Stream closed".equals(e.getMessage()) && !isShuttingDown.get()) {
-                    log.error("实例 {} 读取错误流失败", id, e);
-                }
-            } finally {
-                log.debug("实例 {} 错误流读取线程结束", id);
-            }
-        });
-        errorThread.setName("App-Error-Reader-" + id);
-        errorThread.setDaemon(true);
-        errorThread.start();
-    }
-
-    /**
-     * 启动监控线程
-     */
-    private void startMonitorThread() {
-        monitorThread = new Thread(() -> {
-            log.info("开始监控实例 {}", id);
-
-            while (isRunning.get() && !Thread.currentThread().isInterrupted()) {
-                try {
-                    // 每5秒检查一次进程状态
-                    Thread.sleep(5000);
-
-                    if (process != null) {
-                        // 检查进程是否还在运行
-                        if (!process.isAlive()) {
-                            int exitCode = process.exitValue();
-                            log.warn("实例 {} 已意外退出，退出代码: {}", id, exitCode);
-                            isRunning.set(false);
-                            break;
-                        }
-
-                        // 可以在这里添加其他监控逻辑，如资源使用情况等
-                        log.debug("实例 {} 运行正常，进程ID: {}", id, getProcessId());
-                    }
-                } catch (InterruptedException e) {
-                    log.info("实例 {} 监控线程被中断", id);
-                    Thread.currentThread().interrupt();
-                    break;
-                } catch (Exception e) {
-                    log.error("实例 {} 监控线程发生异常", id, e);
-                }
-            }
-
-            log.info("实例 {} 监控结束", id);
-        });
-
-        monitorThread.setName("App-Monitor-" + id);
-        monitorThread.setDaemon(true);
-        monitorThread.start();
     }
 
     /**
@@ -262,7 +155,6 @@ public class PixelStreamingLauncher {
      * 终止应用程序
      */
     public void destroy() {
-        isShuttingDown.set(true);
 
         if (process != null) {
             log.info("正在终止实例 {}...", id);
@@ -291,16 +183,12 @@ public class PixelStreamingLauncher {
                 Thread.currentThread().interrupt();
             }
 
+            killProcess(Paths.get(executablePath).getFileName().toString(), id);
+
             process = null;
             isRunning.set(false);
         }
-
-        // 中断监控线程
-        if (monitorThread != null && monitorThread.isAlive()) {
-            monitorThread.interrupt();
-        }
-
-        isShuttingDown.set(false);
+        isRunning.set(false);
     }
 
     /**

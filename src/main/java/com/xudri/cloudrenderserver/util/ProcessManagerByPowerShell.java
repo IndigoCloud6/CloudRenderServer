@@ -20,7 +20,7 @@ import java.util.List;
 public class ProcessManagerByPowerShell {
 
     public static String killProcessListByPid(String pid) {
-        String command = "Stop-Process -Id "+pid+" -Force";
+        String command = "Stop-Process -Id " + pid + " -Force";
         return executeCommand(command);
     }
 
@@ -81,13 +81,26 @@ public class ProcessManagerByPowerShell {
         }
     }
 
-    public static void main(String[] args) {
-        JSONArray processList = ProcessManagerByPowerShell.queryProcessListByCmdKeyAndProcessName("XDTC","664339b4cc843b99adc672ff");
-        System.out.println(processList);
+
+    public static void killProcess(String processName, String cmdKey) {
+
+        JSONArray processList = ProcessManagerByPowerShell.queryProcessListByCmdKeyAndProcessName(processName, cmdKey);
         for (int i = 0; i < processList.size(); i++) {
             JSONObject process = processList.getJSONObject(i);
             String processId = process.getString("ProcessId");
             ProcessManagerByPowerShell.killProcessListByPid(processId);
+        }
+    }
+
+
+    public static void main(String[] args) {
+        JSONArray processList = ProcessManagerByPowerShell.queryProcessListByCmdKeyAndProcessName("XDTC", "68a5c1b4e8ef822ca01eb028");
+        System.out.println(processList);
+        for (int i = 0; i < processList.size(); i++) {
+            JSONObject process = processList.getJSONObject(i);
+            String processId = process.getString("ProcessId");
+            System.out.println(processId);
+            //ProcessManagerByPowerShell.killProcessListByPid(processId);
         }
     }
 }

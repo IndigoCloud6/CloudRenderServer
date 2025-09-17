@@ -16,9 +16,7 @@ import java.util.Map;
  */
 public interface InstanceService extends IService<Instance> {
 
-    boolean addInstance(JSONObject jsonObject);
-
-    boolean aupdateInstance(JSONObject instance);
+    boolean addOrUpdateInstance(JSONObject instance);
 
     Map runInstance(String id) throws InterruptedException;
 
