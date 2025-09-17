@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @ClassName ProcessManagerByPoweShell
+ * @ClassName ProcessManagerByPowerShell
  * @Description TODO
  * @Author MaxYun
  * @Date 2024/5/14 8:59

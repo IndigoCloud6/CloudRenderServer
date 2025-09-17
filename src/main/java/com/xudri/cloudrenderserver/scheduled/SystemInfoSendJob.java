@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * @ClassName UeClientDealJob
- * @Description TODO
+ * @ClassName SystemInfoSendJob
+ * @Description 定时向管理客户端发送系统信息
  * @Author MaxYun
  * @Date 2023/9/20 12:00
  * @Version 1.0
@@ -41,19 +41,59 @@ public class SystemInfoSendJob {
 
     @Scheduled(fixedRate = 5000)
     public void sysInfo() {
-        List<Channel> channels = clientManager.getChannelsByType("admin");
-        if (!channels.isEmpty()) {
+        try {
+            List<Channel> channels = clientManager.getChannelsByType("admin");
+            if (channels.isEmpty()) {
+                if (log.isDebugEnabled()) {
+                    log.debug("No admin channels available for system info broadcast");
+                }
+                return;
+            }
+
+            // 获取系统信息
+            JSONObject systemInfo = getSystemInfo();
+            String message = systemInfo.toJSONString();
+
+            // 同步发送到所有通道
+            for (Channel channel : channels) {
+                try {
+                    messageHelper.sendMessage(channel, message);
+                    if (log.isDebugEnabled()) {
+                        log.debug("System info sent to channel: {}", channel.id());
+                    }
+                } catch (Exception e) {
+                    log.error("Failed to send system info to channel: {}", channel.id(), e);
+                }
+            }
+
+            if (log.isDebugEnabled()) {
+                log.debug("System info broadcast completed to {} channels", channels.size());
+            }
+        } catch (Exception e) {
+            log.error("Error in system info scheduled task", e);
+        }
+    }
+
+    /**
+     * 获取系统信息
+     */
+    private JSONObject getSystemInfo() {
+        try {
             long projectCount = projectService.count();
             int instanceCount = systemConfigService.getInsLimit();
-            int runingCount = 0;
+            int runningCount = 0; // TODO: 需要实现获取实际运行实例数
+
             HostInfo systemInfo = SystemInfoUtil.getSystemInfo();
-            JSONObject returnData = JSON.parseObject(JSON.toJSONString(systemInfo));
-            returnData.put("projectCount", projectCount);
-            returnData.put("instanceCount", instanceCount);
-            returnData.put("runningCount", runingCount);
-            for (Channel channel : channels) {
-                messageHelper.sendMessage(channel, JSON.toJSONString(returnData));
-            }
+            JSONObject result = JSON.parseObject(JSON.toJSONString(systemInfo));
+            result.put("projectCount", projectCount);
+            result.put("instanceCount", instanceCount);
+            result.put("runningCount", runningCount);
+
+            return result;
+        } catch (Exception e) {
+            log.error("Failed to get system info", e);
+            // 返回一个空的JSON对象而不是null，避免NPE
+            return new JSONObject();
         }
     }
 }

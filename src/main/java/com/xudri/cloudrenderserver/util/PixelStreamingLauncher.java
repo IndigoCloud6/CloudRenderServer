@@ -69,6 +69,7 @@ public class PixelStreamingLauncher {
 
             // 启动进程
             process = processBuilder.start();
+            this.launchTime = LocalDateTime.now();
             isRunning.set(true);
 
             log.info("实例 {} 已启动，进程ID: {}", id, getProcessId());

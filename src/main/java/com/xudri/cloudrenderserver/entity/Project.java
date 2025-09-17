@@ -1,6 +1,8 @@
 package com.xudri.cloudrenderserver.entity;
 
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,6 +17,7 @@ import lombok.EqualsAndHashCode;
 @Data
 public class Project extends Model<Project> {
 
+    @TableId(value = "project_id", type = IdType.INPUT)
     private String projectId;
 
     private String projectName;
