@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xudri.cloudrenderserver.dao.ProjectDao">
+<mapper namespace="com.xudri.cloudrenderserver.infrastructure.repository.ProjectDao">
 
-    <resultMap type="com.xudri.cloudrenderserver.entity.Project" id="ProjectMap">
+    <resultMap type="com.xudri.cloudrenderserver.common.constant.Project" id="ProjectMap">
         <result property="projectId" column="project_id" jdbcType="VARCHAR"/>
         <result property="projectName" column="project_name" jdbcType="VARCHAR"/>
         <result property="createDate" column="create_date" jdbcType="VARCHAR"/>

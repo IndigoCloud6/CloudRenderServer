@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xudri.cloudrenderserver.dao.SystemConfigDao">
+<mapper namespace="com.xudri.cloudrenderserver.infrastructure.repository.SystemConfigDao">
 
-    <resultMap type="com.xudri.cloudrenderserver.entity.SystemConfig" id="SystemConfigMap">
+    <resultMap type="com.xudri.cloudrenderserver.common.constant.SystemConfig" id="SystemConfigMap">
         <result property="signallingserverport" column="SignallingServerPort" jdbcType="VARCHAR"/>
         <result property="renderclientpath" column="RenderClientPath" jdbcType="VARCHAR"/>
         <result property="maximuminstancecount" column="MaximumInstanceCount" jdbcType="INTEGER"/>
