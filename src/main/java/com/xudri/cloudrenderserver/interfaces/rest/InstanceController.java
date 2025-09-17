@@ -2,7 +2,7 @@ package com.xudri.cloudrenderserver.interfaces.rest;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.xudri.cloudrenderserver.common.exception.Result;
-import com.xudri.cloudrenderserver.common.constant.Instance;
+import com.xudri.cloudrenderserver.domain.entity.Instance;
 import com.xudri.cloudrenderserver.application.service.InstanceService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.Resource;

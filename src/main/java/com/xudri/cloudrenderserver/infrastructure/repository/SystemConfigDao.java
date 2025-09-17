@@ -1,7 +1,7 @@
 package com.xudri.cloudrenderserver.infrastructure.repository;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.xudri.cloudrenderserver.common.constant.SystemConfig;
+import com.xudri.cloudrenderserver.domain.entity.SystemConfig;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

@@ -1,4 +1,4 @@
-package com.xudri.cloudrenderserver.common.constant;
+package com.xudri.cloudrenderserver.domain.entity;
 
 public class Gpu {
     private int deviceId;

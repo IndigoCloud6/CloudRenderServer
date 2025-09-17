@@ -2,7 +2,7 @@ package com.xudri.cloudrenderserver.infrastructure.monitor;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.xudri.cloudrenderserver.common.constant.HostInfo;
+import com.xudri.cloudrenderserver.domain.entity.HostInfo;
 import com.xudri.cloudrenderserver.application.service.ProjectService;
 import com.xudri.cloudrenderserver.application.service.SystemConfigService;
 import com.xudri.cloudrenderserver.core.client.ClientManager;

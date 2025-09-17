@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xudri.cloudrenderserver.infrastructure.repository.SystemConfigDao;
-import com.xudri.cloudrenderserver.common.constant.SystemConfig;
+import com.xudri.cloudrenderserver.domain.entity.SystemConfig;
 import com.xudri.cloudrenderserver.application.service.SystemConfigService;
 import org.springframework.stereotype.Service;
 

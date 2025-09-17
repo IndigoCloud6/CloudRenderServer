@@ -1,8 +1,8 @@
 package com.xudri.cloudrenderserver.infrastructure.monitor;
 
 import cn.hutool.core.util.NumberUtil;
-import com.xudri.cloudrenderserver.common.constant.Gpu;
-import com.xudri.cloudrenderserver.common.constant.HostInfo;
+import com.xudri.cloudrenderserver.domain.entity.Gpu;
+import com.xudri.cloudrenderserver.domain.entity.HostInfo;
 import lombok.extern.log4j.Log4j2;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;

@@ -1,7 +1,7 @@
 package com.xudri.cloudrenderserver.config;
 
 import cn.hutool.core.net.NetUtil;
-import com.xudri.cloudrenderserver.common.constant.SystemConfig;
+import com.xudri.cloudrenderserver.domain.entity.SystemConfig;
 import com.xudri.cloudrenderserver.infrastructure.network.SignallingServer;
 import com.xudri.cloudrenderserver.application.service.SystemConfigService;
 import jakarta.annotation.Resource;

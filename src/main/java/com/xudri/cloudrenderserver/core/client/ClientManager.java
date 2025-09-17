@@ -2,7 +2,7 @@ package com.xudri.cloudrenderserver.core.client;
 
 import cn.hutool.core.convert.Convert;
 import com.alibaba.fastjson2.JSONObject;
-import com.xudri.cloudrenderserver.common.constant.ClientType;
+import com.xudri.cloudrenderserver.domain.enums.ClientType;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelId;
 import io.netty.channel.group.ChannelGroup;

@@ -2,7 +2,7 @@ package com.xudri.cloudrenderserver.core.client;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.xudri.cloudrenderserver.common.constant.ClientType;
+import com.xudri.cloudrenderserver.domain.enums.ClientType;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;

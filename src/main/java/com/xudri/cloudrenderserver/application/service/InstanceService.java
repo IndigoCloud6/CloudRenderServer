@@ -2,7 +2,7 @@ package com.xudri.cloudrenderserver.application.service;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.xudri.cloudrenderserver.common.constant.Instance;
+import com.xudri.cloudrenderserver.domain.entity.Instance;
 
 
 import java.util.List;

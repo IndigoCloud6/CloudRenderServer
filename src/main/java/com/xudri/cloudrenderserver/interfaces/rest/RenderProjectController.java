@@ -3,7 +3,7 @@ package com.xudri.cloudrenderserver.interfaces.rest;
 import cn.hutool.core.io.file.FileNameUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xudri.cloudrenderserver.common.exception.Result;
-import com.xudri.cloudrenderserver.common.constant.Project;
+import com.xudri.cloudrenderserver.domain.entity.Project;
 import com.xudri.cloudrenderserver.application.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

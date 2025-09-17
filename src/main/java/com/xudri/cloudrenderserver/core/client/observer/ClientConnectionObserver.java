@@ -1,6 +1,6 @@
 package com.xudri.cloudrenderserver.core.client.observer;
 
-import com.xudri.cloudrenderserver.common.constant.ClientType;
+import com.xudri.cloudrenderserver.domain.enums.ClientType;
 import io.netty.channel.Channel;
 
 /**

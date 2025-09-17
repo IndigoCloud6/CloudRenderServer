@@ -1,4 +1,4 @@
-package com.xudri.cloudrenderserver.common.constant;
+package com.xudri.cloudrenderserver.domain.enums;
 
 import lombok.Getter;
 

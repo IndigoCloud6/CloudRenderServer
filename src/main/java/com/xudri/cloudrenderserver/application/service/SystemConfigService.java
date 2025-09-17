@@ -1,7 +1,7 @@
 package com.xudri.cloudrenderserver.application.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.xudri.cloudrenderserver.common.constant.SystemConfig;
+import com.xudri.cloudrenderserver.domain.entity.SystemConfig;
 
 
 /**
