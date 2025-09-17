@@ -1,0 +1,12 @@
+  ______  __        ______    __    __   _______  .______       _______ .__   __.  _______   _______ .______
+ /      ||  |      /  __  \  |  |  |  | |       \ |   _  \     |   ____||  \ |  | |       \ |   ____||   _  \
+|  ,----'|  |     |  |  |  | |  |  |  | |  .--.  ||  |_)  |    |  |__   |   \|  | |  .--.  ||  |__   |  |_)  |
+|  |     |  |     |  |  |  | |  |  |  | |  |  |  ||      /     |   __|  |  . `  | |  |  |  ||   __|  |      /
+|  `----.|  `----.|  `--'  | |  `--'  | |  '--'  ||  |\  \----.|  |____ |  |\   | |  '--'  ||  |____ |  |\  \----.
+ \______||_______| \______/   \______/  |_______/ | _| `._____||_______||__| \__| |_______/ |_______|| _| `._____|
+
+Version number of your application declared in MANIFEST.MF: ${application.version}
+Version number of your application declared in MANIFEST.MF formatted: ${application.formatted-version}
+Spring Boot version: ${spring-boot.version}
+Spring Boot version formatted: ${spring-boot.formatted-version}
+The title of your application, as declared in MANIFEST.MF: ${application.title}

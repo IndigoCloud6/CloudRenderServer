@@ -1,5 +1,6 @@
 package com.xudri.cloudrenderserver.common.exception;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
@@ -12,7 +13,9 @@ import java.util.Optional;
  * @date 2023/3/31 9:49
  */
 public class Result<T> implements Serializable {
-    private static final long serialVersionUID = 1L;
+
+    @Serial
+    private static final long serialVersionUID = 467745216038988562L;
 
     private long code;
     private T data;
