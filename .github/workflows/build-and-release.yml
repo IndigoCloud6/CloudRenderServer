@@ -1,0 +1,121 @@
+name: 🚀 构建和发布
+
+on:
+  push:
+    branches: [ main, develop ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  JAVA_VERSION: '17'
+  MAVEN_OPTS: -Xmx1024m
+
+jobs:
+  # 代码质量检查
+  code-quality:
+    name: 📊 代码质量检查
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 检出代码
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: ☕ 设置 Java 环境
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: 'temurin'
+
+    - name: 📦 Maven 缓存
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+
+    - name: 🔍 代码编译检查
+      run: ./mvnw clean compile -B
+
+    - name: 🧪 运行测试
+      run: ./mvnw test -B
+
+  # 构建应用
+  build:
+    name: 🏗️ 构建应用
+    needs: code-quality
+    runs-on: ubuntu-latest
+    
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      
+    steps:
+    - name: 📥 检出代码
+      uses: actions/checkout@v4
+
+    - name: ☕ 设置 Java 环境
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: 'temurin'
+
+    - name: 📦 Maven 缓存
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+
+    - name: 🏷️ 获取版本号
+      id: version
+      run: |
+        if [[ $GITHUB_REF == refs/tags/* ]]; then
+          VERSION=${GITHUB_REF#refs/tags/}
+        else
+          VERSION=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)-$(date +%Y%m%d-%H%M%S)
+        fi
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "🏷️ 应用版本: $VERSION"
+
+    - name: 🔨 构建应用
+      run: |
+        ./mvnw clean package -B -DskipTests
+        
+    - name: 📝 生成构建信息
+      run: |
+        echo "## 🚀 构建信息" > build-info.md
+        echo "- **版本**: ${{ steps.version.outputs.version }}" >> build-info.md
+        echo "- **分支**: ${{ github.ref_name }}" >> build-info.md
+        echo "- **提交**: ${{ github.sha }}" >> build-info.md
+        echo "- **构建时间**: $(date)" >> build-info.md
+        echo "- **Java版本**: ${{ env.JAVA_VERSION }}" >> build-info.md
+
+    - name: 📦 上传构建产物
+      uses: actions/upload-artifact@v4
+      with:
+        name: cloud-render-server-${{ steps.version.outputs.version }}
+        path: |
+          target/*.jar
+          build-info.md
+          README.md
+        retention-days: 30
+
+  # 部署通知
+  notify:
+    name: 📢 部署通知
+    needs: [build]
+    runs-on: ubuntu-latest
+    if: always() && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
+    
+    steps:
+    - name: 📊 构建状态通知
+      run: |
+        if [[ "${{ needs.build.result }}" == "success" ]]; then
+          echo "✅ 构建成功完成！"
+          echo "🏷️ 版本: ${{ needs.build.outputs.version }}"
+        else
+          echo "❌ 构建过程中出现问题"
+          exit 1
+        fi

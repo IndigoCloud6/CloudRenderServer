@@ -39,10 +39,35 @@ public class Result<T> implements Serializable {
     }
 
     /**
+     * 成功响应 - 新增方法
+     */
+    public static <T> Result<T> success(T data) {
+        return ok(data);
+    }
+
+    /**
+     * 成功响应，仅消息
+     */
+    public static Result<String> success(String message) {
+        Result<String> result = new Result<>();
+        result.setCode(ApiErrorCode.SUCCESS.getCode());
+        result.setMsg(message);
+        result.setData(message);
+        return result;
+    }
+
+    /**
      * 失败响应
      */
     public static <T> Result<T> failed(String msg) {
         return restResult(null, ApiErrorCode.FAILED.getCode(), msg);
+    }
+
+    /**
+     * 错误响应 - 新增方法
+     */
+    public static <T> Result<T> error(String msg) {
+        return failed(msg);
     }
 
     /**
