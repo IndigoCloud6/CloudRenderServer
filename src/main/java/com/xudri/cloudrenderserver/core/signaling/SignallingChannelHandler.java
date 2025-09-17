@@ -7,6 +7,7 @@ import com.xudri.cloudrenderserver.common.constant.MessageType;
 import com.xudri.cloudrenderserver.core.client.ClientManager;
 import com.xudri.cloudrenderserver.core.client.MessageHelper;
 import com.xudri.cloudrenderserver.core.client.PlayerIdPool;
+import com.xudri.cloudrenderserver.common.util.LoggerUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
@@ -63,7 +64,7 @@ public class SignallingChannelHandler extends SimpleChannelInboundHandler<Object
                 handleWebSocketFrame(ctx, msg);
             }
         } catch (Exception e) {
-            log.error("Error processing message: {}", msg.getClass().getSimpleName(), e);
+            LoggerUtil.logError(log, "消息处理", "处理消息时发生错误，消息类型：" + msg.getClass().getSimpleName(), e);
             ctx.close();
         }
     }
@@ -82,7 +83,7 @@ public class SignallingChannelHandler extends SimpleChannelInboundHandler<Object
             Map<String, String> params = extractUrlParameters(request.uri());
             processConnectionParameters(ctx, params);
         } catch (Exception e) {
-            log.error("Error during WebSocket handshake", e);
+            LoggerUtil.logError(log, "WebSocket握手", "WebSocket握手过程中发生错误", e);
             sendServerErrorResponse(ctx, request);
         }
     }
@@ -93,7 +94,8 @@ public class SignallingChannelHandler extends SimpleChannelInboundHandler<Object
     private void processConnectionParameters(ChannelHandlerContext ctx, Map<String, String> params) {
         Optional<ClientType> clientType = validateAndGetClientType(params);
         if (clientType.isEmpty()) {
-            log.warn("Unknown client type, closing connection. Parameters: {}", params);
+            LoggerUtil.logWarning(log, "客户端连接", "未知的客户端类型，关闭连接。参数：" + params);
+            log.warn("未知的客户端类型，关闭连接。参数：{}", params);
             ctx.close();
             return;
         }
@@ -189,14 +191,17 @@ public class SignallingChannelHandler extends SimpleChannelInboundHandler<Object
      */
     private void handlePlayerConnection(ChannelHandlerContext ctx, Channel player, Map<String, String> params) {
         String playerId = String.valueOf(playerIdPool.getPlayerId());
-        log.info("Player {} connected", playerId);
+        LoggerUtil.logConnection("播放器", playerId.toString(), "已连接", 
+            String.format("IP地址：%s", ((InetSocketAddress) ctx.channel().remoteAddress()).getAddress().getHostAddress()));
+        log.info("播放器 {} 已连接", playerId);
         player.attr(ClientManager.PLAYERID).set(playerId);
 
         Channel streamer = clientManager.findStreamerForPlayer(params);
         if (streamer != null) {
             establishPlayerStreamerConnection(player, streamer, playerId);
         } else {
-            log.warn("No available streamer found for player {}, closing connection", playerId);
+            LoggerUtil.logConnection("播放器", playerId.toString(), "连接失败", "未找到可用的像素流实例");
+            log.warn("播放器 {} 未找到可用的像素流实例，关闭连接", playerId);
             playerIdPool.releasePlayerId(playerId);
             ctx.close();
         }
@@ -219,7 +224,11 @@ public class SignallingChannelHandler extends SimpleChannelInboundHandler<Object
         setStreamerAttributes(streamer, params);
 
         String insId = params.get("insid");
-        log.info("Streamer {} connected", insId);
+        LoggerUtil.logConnection("像素流实例", insId, "已连接", 
+            String.format("IP地址：%s，项目ID：%s", 
+                ((InetSocketAddress) streamer.remoteAddress()).getAddress().getHostAddress(),
+                params.get("projectid")));
+        log.info("像素流实例 {} 已连接", insId);
 
         messageHelper.sendConfigMessage(streamer);
         messageHelper.sendIdentifyMessage(streamer);
@@ -245,7 +254,9 @@ public class SignallingChannelHandler extends SimpleChannelInboundHandler<Object
      */
     private void handleAdminConnection(Channel channel) {
         clientManager.addChannel(channel);
-        log.info("Admin client connected");
+        LoggerUtil.logConnection("管理员", "admin", "已连接", 
+            String.format("IP地址：%s", ((InetSocketAddress) channel.remoteAddress()).getAddress().getHostAddress()));
+        log.info("管理员客户端已连接");
     }
 
     /**
@@ -428,7 +439,8 @@ public class SignallingChannelHandler extends SimpleChannelInboundHandler<Object
                 handleStreamerDisconnection(channel);
                 break;
             case ADMIN:
-                log.info("Admin client disconnected");
+                LoggerUtil.logConnection("管理员", "admin", "已断开连接", "正常断开");
+                log.info("管理员客户端已断开连接");
                 break;
         }
     }
@@ -440,7 +452,8 @@ public class SignallingChannelHandler extends SimpleChannelInboundHandler<Object
         String playerId = channel.attr(ClientManager.PLAYERID).get();
 
         if (playerId != null) {
-            log.info("Player {} disconnected", playerId);
+            LoggerUtil.logConnection("播放器", playerId, "已断开连接", "正常断开");
+            log.info("播放器 {} 已断开连接", playerId);
             playerIdPool.releasePlayerId(playerId);
             Optional<Channel> streamer = clientManager.getSubscribedStreamer(channel.id());
             streamer.ifPresent(value -> messageHelper.unsubscribeStreamer(value, playerId));
@@ -453,7 +466,8 @@ public class SignallingChannelHandler extends SimpleChannelInboundHandler<Object
      */
     private void handleStreamerDisconnection(Channel channel) {
         String insId = channel.attr(ClientManager.INS_ID).get();
-        log.info("Streamer {} disconnected", insId);
+        LoggerUtil.logConnection("像素流实例", insId, "已断开连接", "正常断开");
+        log.info("像素流实例 {} 已断开连接", insId);
 
         // 断开所有连接的播放器
         List<ChannelId> players = clientManager.getPlayers(channel.id());

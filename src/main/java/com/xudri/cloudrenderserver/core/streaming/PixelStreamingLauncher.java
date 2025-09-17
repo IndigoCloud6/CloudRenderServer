@@ -1,6 +1,7 @@
 package com.xudri.cloudrenderserver.core.streaming;
 
 import com.xudri.cloudrenderserver.config.PixelStreamingConfig;
+import com.xudri.cloudrenderserver.common.util.LoggerUtil;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 
@@ -55,14 +56,16 @@ public class PixelStreamingLauncher {
         this.config = config;
 
         if (isRunning.get()) {
-            log.warn("实例 {} 已在运行中", id);
+            LoggerUtil.logInstance(id, "启动失败", "实例已在运行中");
+            log.warn("像素流实例 {} 已在运行中", id);
             return false;
         }
 
         try {
             // 构建命令行
             List<String> command = buildCommand(executablePath, config);
-            log.info("实例 {} 启动命令: {}", id, String.join(" ", command));
+            LoggerUtil.logInstance(id, "准备启动", "启动命令：" + String.join(" ", command));
+            log.info("像素流实例 {} 启动命令: {}", id, String.join(" ", command));
 
             // 创建进程构建器
             ProcessBuilder processBuilder = new ProcessBuilder(command);
@@ -72,11 +75,12 @@ public class PixelStreamingLauncher {
             this.launchTime = LocalDateTime.now();
             isRunning.set(true);
 
-            log.info("实例 {} 已启动，进程ID: {}", id, getProcessId());
+            LoggerUtil.logInstance(id, "启动成功", "进程ID：" + getProcessId());
+            log.info("像素流实例 {} 已启动，进程ID: {}", id, getProcessId());
             return true;
 
         } catch (IOException e) {
-            log.error("实例 {} 启动失败", id, e);
+            LoggerUtil.logError(log, "像素流实例启动", "实例 " + id + " 启动失败", e);
             isRunning.set(false);
             return false;
         }
@@ -205,7 +209,8 @@ public class PixelStreamingLauncher {
      * @return 是否成功重启
      */
     public boolean restart() {
-        log.info("正在重启实例 {}...", id);
+        LoggerUtil.logInstance(id, "准备重启", "正在重启像素流实例");
+        log.info("正在重启像素流实例 {}...", id);
         destroy();
 
         // 等待一段时间确保进程完全终止

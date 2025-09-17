@@ -1,6 +1,7 @@
 package com.xudri.cloudrenderserver.infrastructure.network;
 
 import com.xudri.cloudrenderserver.core.signaling.SignallingChannelInitializer;
+import com.xudri.cloudrenderserver.common.util.LoggerUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelOption;
@@ -52,19 +53,21 @@ public class SignallingServer {
                     .childHandler(signallingChannelInitializer);
 
             channel = bootstrap.bind(servicePort).sync().channel();
-            log.info("Signalling server started on port {}", servicePort);
+            LoggerUtil.logServiceStartup("信令服务器", "启动成功", "端口：" + servicePort);
+            log.info("信令服务器已在端口 {} 上启动", servicePort);
             isRunning = true;
             channel.closeFuture().sync();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            log.error("Signalling server was interrupted.", e);
+            LoggerUtil.logError(log, "信令服务器启动", "信令服务器启动过程被中断", e);
         } catch (Exception e) {
-            log.error("Exception occurred while starting the signalling server.", e);
+            LoggerUtil.logError(log, "信令服务器启动", "启动信令服务器时发生异常", e);
         } finally {
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
             isRunning = false;
-            log.info("Signalling server has been shut down.");
+            LoggerUtil.logServiceStartup("信令服务器", "已关闭", "正常关闭");
+            log.info("信令服务器已关闭");
         }
     }
 
@@ -73,10 +76,12 @@ public class SignallingServer {
             channel.close();
             channel = null;
             isRunning = false;
-            log.info("Signalling server stopped.");
+            LoggerUtil.logServiceStartup("信令服务器", "停止成功", "");
+            log.info("信令服务器已停止");
             return true;
         }
-        log.warn("Signalling server stop attempt failed; server was not running.");
+        LoggerUtil.logWarning(log, "信令服务器", "服务器停止失败，服务器未在运行");
+        log.warn("信令服务器停止失败，服务器未在运行");
         return false;
     }
 }
