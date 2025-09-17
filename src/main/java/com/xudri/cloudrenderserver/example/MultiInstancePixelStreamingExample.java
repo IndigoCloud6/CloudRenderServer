@@ -1,4 +1,4 @@
-package com.xudri.cloudrenderserver.common.util;
+package com.xudri.cloudrenderserver.example;
 
 import com.xudri.cloudrenderserver.config.PixelStreamingConfig;
 import com.xudri.cloudrenderserver.core.streaming.PixelStreamingLauncher;

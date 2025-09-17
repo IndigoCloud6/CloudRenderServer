@@ -2,7 +2,7 @@ package com.xudri.cloudrenderserver.interfaces.rest;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.xudri.cloudrenderserver.common.exception.Result;
-import com.xudri.cloudrenderserver.common.constant.SystemConfig;
+import com.xudri.cloudrenderserver.domain.entity.SystemConfig;
 import com.xudri.cloudrenderserver.application.service.SystemConfigService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

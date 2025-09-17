@@ -2,7 +2,7 @@ package com.xudri.cloudrenderserver.application.facade;
 
 import com.xudri.cloudrenderserver.application.service.InstanceService;
 import com.xudri.cloudrenderserver.application.service.ClientManagerService;
-import com.xudri.cloudrenderserver.common.constant.Instance;
+import com.xudri.cloudrenderserver.domain.entity.Instance;
 import com.xudri.cloudrenderserver.common.exception.Result;
 import com.xudri.cloudrenderserver.common.util.LoggerUtil;
 import com.xudri.cloudrenderserver.core.streaming.PixelStreamingLauncherManager;

@@ -1,4 +1,4 @@
-package com.xudri.cloudrenderserver.common.constant;
+package com.xudri.cloudrenderserver.domain.entity;
 
 
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -36,4 +36,3 @@ public class Instance extends Model<Instance> {
     private String projectName  ;
 
 }
-

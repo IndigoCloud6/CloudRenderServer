@@ -2,8 +2,8 @@ package com.xudri.cloudrenderserver.core.signaling;
 
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson2.JSONObject;
-import com.xudri.cloudrenderserver.common.constant.ClientType;
-import com.xudri.cloudrenderserver.common.constant.MessageType;
+import com.xudri.cloudrenderserver.domain.enums.ClientType;
+import com.xudri.cloudrenderserver.domain.enums.MessageType;
 import com.xudri.cloudrenderserver.core.client.ClientManager;
 import com.xudri.cloudrenderserver.core.client.MessageHelper;
 import com.xudri.cloudrenderserver.core.client.PlayerIdPool;

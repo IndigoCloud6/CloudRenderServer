@@ -1,4 +1,4 @@
-package com.xudri.cloudrenderserver.common.constant;
+package com.xudri.cloudrenderserver.domain.entity;
 
 
 import com.baomidou.mybatisplus.extension.activerecord.Model;
@@ -38,4 +38,3 @@ public class SystemConfig extends Model<SystemConfig> {
     private String coturnpublicip;
 
 }
-

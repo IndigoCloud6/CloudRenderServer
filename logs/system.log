@@ -1,9 +1,0 @@
-2025-09-17 09:34:45.339 [[32mINFO [m] [background-preinit] Version.() - HV000001: Hibernate Validator 8.0.3.Final
-2025-09-17 09:34:45.373 [[32mINFO [m] [main] CloudRenderServerApplicationTests.() - Starting CloudRenderServerApplicationTests using Java 17.0.16 with PID 3540 (started by runner in /home/runner/work/CloudRenderServer/CloudRenderServer)
-2025-09-17 09:34:45.391 [[32mINFO [m] [main] CloudRenderServerApplicationTests.() - No active profile set, falling back to 1 default profile: "default"
-2025-09-17 09:34:47.884 [[32mINFO [m] [main] HikariDataSource.() - HikariPool-1 - Starting...
-2025-09-17 09:34:48.022 [[32mINFO [m] [main] HikariPool.() - HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@5409dfdd
-2025-09-17 09:34:48.023 [[32mINFO [m] [main] HikariDataSource.() - HikariPool-1 - Start completed.
-2025-09-17 09:34:49.297 [[32mINFO [m] [main] MybatisPlusApplicationContextAware.() - Register ApplicationContext instances org.springframework.web.context.support.GenericWebApplicationContext@7c1c5936
-2025-09-17 09:34:49.532 [[32mINFO [m] [main] CloudRenderServerApplicationTests.() - Started CloudRenderServerApplicationTests in 4.712 seconds (process running for 7.264)
-2025-09-17 09:34:49.842 [[32mINFO [m] [task-1] SignallingServer.() - 信令服务器已在端口 8888 上启动

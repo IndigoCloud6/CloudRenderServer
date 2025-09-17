@@ -3,7 +3,7 @@ package com.xudri.cloudrenderserver.interfaces.rest;
 import cn.hutool.core.net.NetUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.xudri.cloudrenderserver.common.exception.Result;
-import com.xudri.cloudrenderserver.common.constant.SystemConfig;
+import com.xudri.cloudrenderserver.domain.entity.SystemConfig;
 import com.xudri.cloudrenderserver.infrastructure.network.SignallingServer;
 import com.xudri.cloudrenderserver.application.service.ClientManagerService;
 import com.xudri.cloudrenderserver.application.service.SystemConfigService;

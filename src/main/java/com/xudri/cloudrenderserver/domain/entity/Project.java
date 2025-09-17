@@ -1,4 +1,4 @@
-package com.xudri.cloudrenderserver.common.constant;
+package com.xudri.cloudrenderserver.domain.entity;
 
 
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -29,4 +29,3 @@ public class Project extends Model<Project> {
     private String savePath;
 
 }
-
