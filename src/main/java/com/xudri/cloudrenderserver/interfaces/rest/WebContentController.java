@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class WebContentController {
 
-    @GetMapping("/player")
+    @GetMapping("/player/")
     public String playerView() {
         return "player/index";
     }

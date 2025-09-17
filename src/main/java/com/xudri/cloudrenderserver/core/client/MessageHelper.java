@@ -137,8 +137,11 @@ public class MessageHelper {
 
     public void subscribeToStreamer(String playerId, Channel streamer) {
         JSONObject message = new JSONObject();
-        message.put("type", "playerDisconnected");
-        message.put("playerId", String.valueOf(playerId));
+        message.put("type", "playerConnected");
+        message.put("playerId", playerId);
+        message.put("dataChannel", true);
+        message.put("sfu", false);
+        message.put("sendOffer", true);
         sendMessage(streamer, message.toString(), "Subscription");
     }
 
