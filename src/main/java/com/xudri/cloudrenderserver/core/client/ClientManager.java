@@ -155,6 +155,16 @@ public class ClientManager {
     }
 
     /**
+     * 获取所有像素流实例
+     */
+    public List<Channel> getAllStreamers() {
+
+        return channels.stream()
+                .filter(this::isStreamer)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * 根据类型获取通道列表
      */
     public List<Channel> getChannelsByType(String type) {

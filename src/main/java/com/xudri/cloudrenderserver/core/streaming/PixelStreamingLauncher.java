@@ -42,6 +42,7 @@ public class PixelStreamingLauncher {
     public PixelStreamingLauncher(String id, String groupId) {
         this.id = id;
         this.groupId = groupId;
+        this.launchTime = LocalDateTime.now();
     }
 
     /**

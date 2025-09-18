@@ -1,4 +1,5 @@
 package com.xudri.cloudrenderserver.core.streaming;
+
 import com.xudri.cloudrenderserver.config.PixelStreamingConfig;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -24,10 +25,11 @@ public class PixelStreamingLauncherManager {
 
     /**
      * 启动新的像素流实例
-     * @param id 实例唯一ID
-     * @param groupId 实例组ID
+     *
+     * @param id             实例唯一ID
+     * @param groupId        实例组ID
      * @param executablePath 可执行文件路径
-     * @param config 像素流配置
+     * @param config         像素流配置
      * @return 是否成功启动
      */
     public boolean launch(String id, String groupId, String executablePath, PixelStreamingConfig config) {
@@ -52,7 +54,28 @@ public class PixelStreamingLauncherManager {
     }
 
     /**
+     * 添加已有的像素流实例
+     *
+     * @param launcher
+     */
+
+    public void addLauncher(PixelStreamingLauncher launcher) {
+
+        if (launchers.containsKey(launcher.getId())) {
+            log.warn("实例ID {} 已存在", launcher.getId());
+            return;
+        }
+
+        launchers.put(launcher.getId(), launcher);
+        // 添加到组映射
+        groupLaunchers.computeIfAbsent(launcher.getGroupId(), k -> new HashSet<>()).add(launcher.getId());
+
+    }
+
+
+    /**
      * 停止指定实例
+     *
      * @param id 实例ID
      * @return 是否成功停止
      */
@@ -81,6 +104,7 @@ public class PixelStreamingLauncherManager {
 
     /**
      * 停止指定组的所有实例
+     *
      * @param groupId 组ID
      * @return 成功停止的实例数量
      */
@@ -107,6 +131,7 @@ public class PixelStreamingLauncherManager {
 
     /**
      * 停止所有实例
+     *
      * @return 成功停止的实例数量
      */
     public int stopAll() {
@@ -127,6 +152,7 @@ public class PixelStreamingLauncherManager {
 
     /**
      * 重启指定实例
+     *
      * @param id 实例ID
      * @return 是否成功重启
      */
@@ -142,6 +168,7 @@ public class PixelStreamingLauncherManager {
 
     /**
      * 重启指定组的所有实例
+     *
      * @param groupId 组ID
      * @return 成功重启的实例数量
      */
@@ -165,6 +192,7 @@ public class PixelStreamingLauncherManager {
 
     /**
      * 获取指定实例
+     *
      * @param id 实例ID
      * @return 实例对象，如果不存在则返回null
      */
@@ -174,6 +202,7 @@ public class PixelStreamingLauncherManager {
 
     /**
      * 获取指定组的所有实例
+     *
      * @param groupId 组ID
      * @return 实例集合，如果组不存在则返回空集合
      */
@@ -196,6 +225,7 @@ public class PixelStreamingLauncherManager {
 
     /**
      * 获取所有实例
+     *
      * @return 所有实例的集合
      */
     public Collection<PixelStreamingLauncher> getAllLaunchers() {
@@ -204,6 +234,7 @@ public class PixelStreamingLauncherManager {
 
     /**
      * 获取所有组ID
+     *
      * @return 所有组ID的集合
      */
     public Set<String> getAllGroupIds() {
@@ -212,6 +243,7 @@ public class PixelStreamingLauncherManager {
 
     /**
      * 检查指定实例是否正在运行
+     *
      * @param id 实例ID
      * @return 是否正在运行
      */
@@ -222,6 +254,7 @@ public class PixelStreamingLauncherManager {
 
     /**
      * 获取运行中的实例数量
+     *
      * @return 运行中的实例数量
      */
     public int getRunningCount() {
@@ -236,6 +269,7 @@ public class PixelStreamingLauncherManager {
 
     /**
      * 获取实例总数
+     *
      * @return 实例总数
      */
     public int getTotalCount() {
@@ -244,6 +278,7 @@ public class PixelStreamingLauncherManager {
 
     /**
      * 清理已停止的实例
+     *
      * @return 清理的实例数量
      */
     public int cleanup() {
