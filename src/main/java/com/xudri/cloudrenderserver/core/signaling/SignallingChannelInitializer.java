@@ -24,7 +24,7 @@ public class SignallingChannelInitializer extends ChannelInitializer<SocketChann
     private SignallingChannelHandler signallingChannelHandler;
 
     @Override
-    protected void initChannel(SocketChannel socketChannel) throws Exception {
+    protected void initChannel(SocketChannel socketChannel) {
         socketChannel
                 .pipeline()
                 .addLast(new IdleStateHandler(0, 30, 0, TimeUnit.SECONDS))

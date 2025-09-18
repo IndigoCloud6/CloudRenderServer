@@ -2,6 +2,7 @@ package com.xudri.cloudrenderserver.infrastructure.monitor;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.xudri.cloudrenderserver.core.streaming.PixelStreamingLauncherManager;
 import com.xudri.cloudrenderserver.domain.entity.HostInfo;
 import com.xudri.cloudrenderserver.application.service.ProjectService;
 import com.xudri.cloudrenderserver.application.service.SystemConfigService;
@@ -38,6 +39,9 @@ public class SystemInfoSendJob {
 
     @Resource
     private MessageHelper messageHelper;
+
+    @Resource
+    private PixelStreamingLauncherManager pixelStreamingLauncherManager;
 
     @Scheduled(fixedRate = 5000)
     public void sysInfo() {
@@ -81,8 +85,7 @@ public class SystemInfoSendJob {
         try {
             long projectCount = projectService.count();
             int instanceCount = systemConfigService.getInsLimit();
-            int runningCount = 0; // TODO: 需要实现获取实际运行实例数
-
+            int runningCount = pixelStreamingLauncherManager.getAllLaunchers().size();
             HostInfo systemInfo = SystemInfoUtil.getSystemInfo();
             JSONObject result = JSON.parseObject(JSON.toJSONString(systemInfo));
             result.put("projectCount", projectCount);

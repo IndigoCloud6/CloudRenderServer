@@ -123,7 +123,7 @@ public class InstanceServiceImpl extends ServiceImpl<InstanceDao, Instance> impl
         pixelStreamingLauncherManager.launch(
                 id,
                 instance.getProjectid(),
-                project.getSavePath(),
+                systemConfig.getRenderclientpath(),
                 pixelStreamingConfig
         );
 

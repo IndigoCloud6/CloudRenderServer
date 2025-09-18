@@ -44,7 +44,6 @@ public class SignallingChannelHandler extends SimpleChannelInboundHandler<Object
     private WebSocketServerHandshaker handshaker;
     private static final String WEBSOCKET_PATH = "/websocket";
     private static final String WEBSOCKET_UPGRADE_HEADER = "websocket";
-    private static final String UTF_8 = StandardCharsets.UTF_8.name();
 
     @Resource
     private ClientManager clientManager;
@@ -191,7 +190,7 @@ public class SignallingChannelHandler extends SimpleChannelInboundHandler<Object
      */
     private void handlePlayerConnection(ChannelHandlerContext ctx, Channel player, Map<String, String> params) {
         String playerId = String.valueOf(playerIdPool.getPlayerId());
-        LoggerUtil.logConnection("播放器", playerId.toString(), "已连接", 
+        LoggerUtil.logConnection("播放器", playerId, "已连接",
             String.format("IP地址：%s", ((InetSocketAddress) ctx.channel().remoteAddress()).getAddress().getHostAddress()));
         log.info("播放器 {} 已连接", playerId);
         player.attr(ClientManager.PLAYERID).set(playerId);
@@ -200,7 +199,7 @@ public class SignallingChannelHandler extends SimpleChannelInboundHandler<Object
         if (streamer != null) {
             establishPlayerStreamerConnection(player, streamer, playerId);
         } else {
-            LoggerUtil.logConnection("播放器", playerId.toString(), "连接失败", "未找到可用的像素流实例");
+            LoggerUtil.logConnection("播放器", playerId, "连接失败", "未找到可用的像素流实例");
             log.warn("播放器 {} 未找到可用的像素流实例，关闭连接", playerId);
             playerIdPool.releasePlayerId(playerId);
             ctx.close();
