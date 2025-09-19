@@ -58,7 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                         
-                        LoggerUtil.logBusiness("JWT认证", "用户认证成功 - " + username);
+                        //LoggerUtil.logBusiness("JWT认证", "用户认证成功 - " + username);
                     } else {
                         LoggerUtil.logBusiness("JWT认证", "令牌验证失败 - " + username);
                     }

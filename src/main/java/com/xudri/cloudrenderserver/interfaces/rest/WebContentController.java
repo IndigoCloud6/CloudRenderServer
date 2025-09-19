@@ -11,7 +11,7 @@ public class WebContentController {
         return "player/index";
     }
 
-    @GetMapping("/index")
+    @GetMapping("")
     public String indexView() {
         return "index";
     }

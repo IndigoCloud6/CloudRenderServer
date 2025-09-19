@@ -82,7 +82,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/**", "/api-docs/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 
                 // 静态资源
-                .requestMatchers("/", "/index", "/player/**", "/static/**", "/css/**", "/js/**", "/images/**").permitAll()
+                .requestMatchers("/", "/index", "/player/**", "/fonts/**", "/css/**", "/js/**", "/img/**", "/favicon.ico").permitAll()
                 
                 // 管理员接口需要ADMIN角色
                 .requestMatchers("/admin/**").hasRole("ADMIN")
