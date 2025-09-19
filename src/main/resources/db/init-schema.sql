@@ -6,6 +6,15 @@
 PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
+
+-- 表：user
+CREATE TABLE IF NOT EXISTS user (
+                                    name     TEXT PRIMARY KEY
+                                    UNIQUE,
+                                    password TEXT NOT NULL
+);
+
+
 -- 表：instance
 CREATE TABLE IF NOT EXISTS instance (
                                         ID           TEXT    PRIMARY KEY
