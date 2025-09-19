@@ -18,7 +18,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 @EnableAspectJAutoProxy
-@MapperScan("com.xudri.cloudrenderserver.infrastructure.repository")
+@MapperScan({"com.xudri.cloudrenderserver.infrastructure.mapper", "com.xudri.cloudrenderserver.infrastructure.repository"})
 public class CloudRenderServerApplication {
 
     public static void main(String[] args) {

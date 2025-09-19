@@ -40,3 +40,15 @@ mybatis-plus:
     #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: mapper/*.xml
 
+# JWT配置
+jwt:
+  secret: cloudRenderServerJwtSecretKey2024ForAuthenticationAndAuthorization
+  expiration: 86400000    # 24小时，单位毫秒
+  refresh-expiration: 604800000  # 7天，单位毫秒
+
+# 日志配置
+logging:
+  level:
+    com.xudri.cloudrenderserver: DEBUG
+    org.springframework.security: DEBUG
+
