@@ -40,9 +40,9 @@ CREATE TABLE IF NOT EXISTS user_roles (
 INSERT OR IGNORE INTO roles (name, description) VALUES ('ADMIN', '管理员');
 INSERT OR IGNORE INTO roles (name, description) VALUES ('USER', '普通用户');
 
--- 插入默认管理员用户 (密码: admin123)
+-- 插入默认管理员用户 (密码: admin123) - 使用正确的BCrypt hash
 INSERT OR IGNORE INTO user (username, password, email, status, name) 
-VALUES ('admin', '$2a$10$N.wmXWM8RvqhC3bk7F9XeOuQv9mYjRl7XP/7t2tDhDqIc9bXgT4Gu', 'admin@cloudrenderserver.com', 1, 'admin');
+VALUES ('admin', '$2a$12$OVLcEa.lBttVc6wOEGwDKecq2mqfHjDFgM1BVGYKxvnQ0Lk5RZtNK', 'admin@cloudrenderserver.com', 1, 'admin');
 
 
 -- 表：instance

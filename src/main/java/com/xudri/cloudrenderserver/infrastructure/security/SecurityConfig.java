@@ -75,7 +75,7 @@ public class SecurityConfig {
             // 配置认证授权规则
             .authorizeHttpRequests(authz -> authz
                 // 公开的认证相关接口
-                .requestMatchers("/auth/login", "/auth/register").permitAll()
+                .requestMatchers("/auth/login", "/auth/register", "/auth/refresh").permitAll()
                 
                 // API文档相关接口
                 .requestMatchers("/api/**", "/api-docs/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
