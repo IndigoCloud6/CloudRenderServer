@@ -9,6 +9,7 @@ import java.io.Serial;
  * @Date 2023/3/31 9:52
  * @Version 1.0
  */
+
 public class ApiException extends RuntimeException {
     @Serial
     private static final long serialVersionUID = -5885155226898287919L;

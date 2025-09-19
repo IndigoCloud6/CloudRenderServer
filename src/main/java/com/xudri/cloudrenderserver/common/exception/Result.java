@@ -1,6 +1,6 @@
 package com.xudri.cloudrenderserver.common.exception;
 
-import lombok.Getter;
+import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,7 +14,7 @@ import java.util.Optional;
  * @author MaxYun
  * @date 2023/3/31 9:49
  */
-@Getter
+@Data
 public class Result<T> implements Serializable {
 
     @Serial
