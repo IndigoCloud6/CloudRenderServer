@@ -35,3 +35,6 @@ build/
 
 ### Logs ###
 logs/
+
+# db ###
+system.db
