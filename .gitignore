@@ -24,6 +24,7 @@ target/
 /nbbuild/
 /dist/
 /log/
+/logs/
 /nbdist/
 /.nb-gradle/
 build/
@@ -33,8 +34,6 @@ build/
 ### VS Code ###
 .vscode/
 
-### Logs ###
-logs/
 
 # db ###
 system.db
