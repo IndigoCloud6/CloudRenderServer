@@ -1,5 +1,7 @@
 package com.xudri.cloudrenderserver.common.exception;
 
+import lombok.Getter;
+
 /**
  * @ClassName ApiErrorCode
  * @Description TODO
@@ -7,6 +9,7 @@ package com.xudri.cloudrenderserver.common.exception;
  * @Date 2023/3/31 9:53
  * @Version 1.0
  */
+@Getter
 public enum ApiErrorCode implements IErrorCode {
     FAILED(-1L, "操作失败"),
     SUCCESS(0L, "执行成功"),
@@ -44,14 +47,6 @@ public enum ApiErrorCode implements IErrorCode {
         }
 
         return SUCCESS;
-    }
-
-    public long getCode() {
-        return this.code;
-    }
-
-    public String getMsg() {
-        return this.msg;
     }
 
     public String toString() {

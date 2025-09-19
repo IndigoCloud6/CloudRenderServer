@@ -1,5 +1,7 @@
 package com.xudri.cloudrenderserver.common.exception;
 
+import lombok.Getter;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
@@ -12,11 +14,13 @@ import java.util.Optional;
  * @author MaxYun
  * @date 2023/3/31 9:49
  */
+@Getter
 public class Result<T> implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 467745216038988562L;
 
+    // Getter和Setter方法
     private long code;
     private T data;
     private String msg;
@@ -95,6 +99,15 @@ public class Result<T> implements Serializable {
         return result;
     }
 
+    public static <T> Result<T> error(long code, String message, T data) {
+        Result<T> result = new Result<>();
+        result.setCode(code);
+        result.setMsg(message);
+        result.setData(data);
+        return result;
+    }
+
+
     /**
      * 判断请求是否成功
      */
@@ -112,27 +125,14 @@ public class Result<T> implements Serializable {
         return this.data;
     }
 
-    // Getter和Setter方法
-    public long getCode() {
-        return this.code;
-    }
-
     public Result<T> setCode(long code) {
         this.code = code;
         return this;
     }
 
-    public T getData() {
-        return this.data;
-    }
-
     public Result<T> setData(T data) {
         this.data = data;
         return this;
-    }
-
-    public String getMsg() {
-        return this.msg;
     }
 
     public Result<T> setMsg(String msg) {
@@ -163,4 +163,6 @@ public class Result<T> implements Serializable {
                 ", data=" + this.data +
                 ", msg=" + this.msg + ")";
     }
+
+
 }

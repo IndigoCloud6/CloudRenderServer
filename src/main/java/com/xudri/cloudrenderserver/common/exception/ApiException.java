@@ -1,5 +1,7 @@
 package com.xudri.cloudrenderserver.common.exception;
 
+import java.io.Serial;
+
 /**
  * @ClassName ApiException
  * @Description TODO
@@ -8,6 +10,7 @@ package com.xudri.cloudrenderserver.common.exception;
  * @Version 1.0
  */
 public class ApiException extends RuntimeException {
+    @Serial
     private static final long serialVersionUID = -5885155226898287919L;
     private IErrorCode errorCode;
 
