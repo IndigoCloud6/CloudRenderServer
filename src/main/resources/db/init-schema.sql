@@ -21,34 +21,34 @@ CREATE TABLE IF NOT EXISTS user (
 
 -- 表：roles
 CREATE TABLE IF NOT EXISTS roles (
-                                    id   INTEGER PRIMARY KEY AUTOINCREMENT,
-                                    name TEXT UNIQUE NOT NULL,
-                                    description TEXT
+                                     id   INTEGER PRIMARY KEY AUTOINCREMENT,
+                                     name TEXT UNIQUE NOT NULL,
+                                     description TEXT
 );
 
 -- 表：user_roles
 CREATE TABLE IF NOT EXISTS user_roles (
-                                         id      INTEGER PRIMARY KEY AUTOINCREMENT,
-                                         user_id INTEGER NOT NULL,
-                                         role_id INTEGER NOT NULL,
-                                         FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
-                                         FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE,
-                                         UNIQUE(user_id, role_id)
-);
+                                          id      INTEGER PRIMARY KEY AUTOINCREMENT,
+                                          user_id INTEGER NOT NULL,
+                                          role_id INTEGER NOT NULL,
+                                          FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
+    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE,
+    UNIQUE(user_id, role_id)
+    );
 
 -- 插入默认角色
 INSERT OR IGNORE INTO roles (name, description) VALUES ('ADMIN', '管理员');
 INSERT OR IGNORE INTO roles (name, description) VALUES ('USER', '普通用户');
 
--- 插入默认管理员用户 (密码: admin123) - 使用正确的BCrypt hash
+-- 插入默认管理员用户 (密码: 1qaz@WSX) - 使用正确的BCrypt hash
 INSERT OR IGNORE INTO user (username, password, email, status, name) 
-VALUES ('admin', '$2a$12$OVLcEa.lBttVc6wOEGwDKecq2mqfHjDFgM1BVGYKxvnQ0Lk5RZtNK', 'admin@cloudrenderserver.com', 1, 'admin');
+VALUES ('admin', '$2a$10$uCG995tF6254i3H80zvoN.dOYXrs30P0NQEIpDIzM/WC8oHMri4qG', 'admin@cloudrenderserver.com', 1, 'admin');
 
 
 -- 表：instance
 CREATE TABLE IF NOT EXISTS instance (
                                         ID           TEXT    PRIMARY KEY
-                                            NOT NULL,
+                                        NOT NULL,
                                         ProjectID    TEXT,
                                         RenderConfig TEXT,
                                         State        INTEGER
@@ -68,21 +68,21 @@ CREATE TABLE IF NOT EXISTS project (
 -- 表：system_config
 CREATE TABLE IF NOT EXISTS system_config (
                                              ID                      INTEGER UNIQUE ON CONFLICT IGNORE
-                                                 PRIMARY KEY,
+                                             PRIMARY KEY,
                                              SignallingServerPort    INTEGER NOT NULL,
                                              RenderClientPath        TEXT    NOT NULL,
                                              MaximumInstanceCount    INTEGER NOT NULL,
                                              CoturnServerPort        INTEGER NOT NULL,
                                              FileSavePath            TEXT    NOT NULL,
                                              AutoRunSignallingServer INTEGER NOT NULL
-                                                 DEFAULT (1),
-                                             AutoRunCoturnServer     INTEGER NOT NULL
-                                                 DEFAULT (1),
-                                             CoturnLocalIP           TEXT,
-                                             CoturnPublicIP          TEXT
-);
+                                             DEFAULT (1),
+    AutoRunCoturnServer     INTEGER NOT NULL
+    DEFAULT (1),
+    CoturnLocalIP           TEXT,
+    CoturnPublicIP          TEXT
+    );
 
-INSERT INTO system_config (
+INSERT OR IGNORE INTO system_config (
     ID,
     SignallingServerPort,
     RenderClientPath,
@@ -109,8 +109,21 @@ VALUES (
 
 
 -- 为默认管理员分配管理员角色
-INSERT OR IGNORE INTO user_roles (user_id, role_id) 
+INSERT OR IGNORE INTO user_roles (user_id, role_id)
 SELECT u.id, r.id FROM user u, roles r WHERE u.username = 'admin' AND r.name = 'ADMIN';
+
+-- 创建索引以提高查询性能
+CREATE INDEX IF NOT EXISTS idx_user_status ON user(status);
+CREATE INDEX IF NOT EXISTS idx_user_created_at ON user(created_at);
+
+CREATE INDEX IF NOT EXISTS idx_user_roles_user_id ON user_roles(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_roles_role_id ON user_roles(role_id);
+
+CREATE INDEX IF NOT EXISTS idx_instance_project_id ON instance(ProjectID);
+CREATE INDEX IF NOT EXISTS idx_instance_state ON instance(State);
+
+CREATE INDEX IF NOT EXISTS idx_project_project_id ON project(project_id);
+CREATE INDEX IF NOT EXISTS idx_project_create_date ON project(create_date);
 
 
 COMMIT TRANSACTION;
