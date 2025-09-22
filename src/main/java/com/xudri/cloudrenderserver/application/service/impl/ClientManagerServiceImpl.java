@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.xudri.cloudrenderserver.application.service.ClientManagerService;
 import com.xudri.cloudrenderserver.core.client.ClientManager;
 import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 
@@ -15,10 +16,10 @@ import org.springframework.stereotype.Service;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class ClientManagerServiceImpl implements ClientManagerService {
 
-    @Resource
-    private ClientManager clientManager;
+    private final ClientManager clientManager;
 
     @Override
     public JSONObject getDetails() {

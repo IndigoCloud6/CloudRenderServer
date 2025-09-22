@@ -6,20 +6,20 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.xudri.cloudrenderserver.infrastructure.repository.InstanceDao;
-import com.xudri.cloudrenderserver.domain.entity.Instance;
-import com.xudri.cloudrenderserver.config.PixelStreamingConfig;
-import com.xudri.cloudrenderserver.domain.entity.Project;
-import com.xudri.cloudrenderserver.domain.entity.SystemConfig;
-import com.xudri.cloudrenderserver.infrastructure.network.SignallingServer;
 import com.xudri.cloudrenderserver.application.service.InstanceService;
 import com.xudri.cloudrenderserver.application.service.ProjectService;
 import com.xudri.cloudrenderserver.application.service.SystemConfigService;
+import com.xudri.cloudrenderserver.config.PixelStreamingConfig;
 import com.xudri.cloudrenderserver.core.client.ClientManager;
 import com.xudri.cloudrenderserver.core.streaming.PixelStreamingLauncherManager;
+import com.xudri.cloudrenderserver.domain.entity.Instance;
+import com.xudri.cloudrenderserver.domain.entity.Project;
+import com.xudri.cloudrenderserver.domain.entity.SystemConfig;
 import com.xudri.cloudrenderserver.infrastructure.monitor.ProcessManagerByPowerShell;
+import com.xudri.cloudrenderserver.infrastructure.network.SignallingServer;
+import com.xudri.cloudrenderserver.infrastructure.repository.InstanceDao;
 import io.netty.channel.Channel;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Files;
@@ -36,6 +36,7 @@ import java.util.Optional;
  * @since 2024-05-13 11:15:47
  */
 @Service("instanceService")
+@RequiredArgsConstructor
 public class InstanceServiceImpl extends ServiceImpl<InstanceDao, Instance> implements InstanceService {
 
     private static final String RESULT_KEY = "result";
@@ -46,20 +47,15 @@ public class InstanceServiceImpl extends ServiceImpl<InstanceDao, Instance> impl
     private static final int DEFAULT_SYSTEM_CONFIG_ID = 1;
     private static final int DEFAULT_MAX_BITRATE = 50000000;
 
-    @Resource
-    private ProjectService projectService;
+    private final ProjectService projectService;
 
-    @Resource
-    private SignallingServer signallingServer;
+    private final SignallingServer signallingServer;
 
-    @Resource
-    private SystemConfigService systemConfigService;
+    private final SystemConfigService systemConfigService;
 
-    @Resource
-    private ClientManager clientManager;
+    private final ClientManager clientManager;
 
-    @Resource
-    private com.xudri.cloudrenderserver.core.streaming.PixelStreamingLauncherManager pixelStreamingLauncherManager;
+    private final PixelStreamingLauncherManager pixelStreamingLauncherManager;
 
     @Override
     public boolean addOrUpdateInstance(JSONObject instance) {

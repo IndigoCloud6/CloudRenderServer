@@ -9,7 +9,7 @@ import com.xudri.cloudrenderserver.application.service.SystemConfigService;
 import com.xudri.cloudrenderserver.domain.entity.Project;
 import com.xudri.cloudrenderserver.domain.entity.SystemConfig;
 import com.xudri.cloudrenderserver.infrastructure.repository.ProjectDao;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import lowentry.ue4.library.LowEntry;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,14 +26,14 @@ import java.util.Objects;
  * @author maxyun
  * @since 2024-04-05 05:26:49
  */
+@RequiredArgsConstructor
 @Service("projectService")
 public class ProjectServiceImpl extends ServiceImpl<ProjectDao, Project> implements ProjectService {
 
     private static final String RESULT = "result";
     private static final String RESULT_MSG = "resultMsg";
 
-    @Resource
-    private SystemConfigService systemConfigService;
+    private final SystemConfigService systemConfigService;
 
     @Override
     public Map<String, Object> addProject(MultipartFile file) throws IOException {
