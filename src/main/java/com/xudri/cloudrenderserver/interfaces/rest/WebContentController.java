@@ -16,7 +16,7 @@ public class WebContentController {
         return "index";
     }
 
-    @GetMapping("login")
+    @GetMapping("/login")
     public String loginView() {
         return "index";
     }

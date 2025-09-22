@@ -63,35 +63,35 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            // 禁用CSRF
-            .csrf(AbstractHttpConfigurer::disable)
-            
-            // 配置CORS
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            
-            // 配置会话管理
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            
-            // 配置认证授权规则
-            .authorizeHttpRequests(authz -> authz
-                // 公开的认证相关接口
-                .requestMatchers("/auth/login", "/auth/register", "/auth/refresh").permitAll()
-                
-                // API文档相关接口
-                .requestMatchers("/api/**", "/api-docs/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                
-                // 静态资源
-                .requestMatchers("/", "/index", "/player/**", "/fonts/**", "/css/**", "/js/**", "/img/**", "/favicon.ico").permitAll()
-                
-                // 管理员接口需要ADMIN角色
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                
-                // 其他所有接口需要认证
-                .anyRequest().authenticated()
-            )
-            
-            // 添加JWT过滤器
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                // 禁用CSRF
+                .csrf(AbstractHttpConfigurer::disable)
+
+                // 配置CORS
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+
+                // 配置会话管理
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                // 配置认证授权规则
+                .authorizeHttpRequests(authz -> authz
+                        // 公开的认证相关接口
+                        .requestMatchers("/login", "/auth/login", "/auth/register", "/auth/refresh").permitAll()
+
+                        // API文档相关接口
+                        .requestMatchers("/api/**", "/api-docs/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+
+                        // 静态资源
+                        .requestMatchers("/", "/index", "/player/**", "/fonts/**", "/css/**", "/js/**", "/img/**", "/favicon.ico").permitAll()
+
+                        // 管理员接口需要ADMIN角色
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+
+                        // 其他所有接口需要认证
+                        .anyRequest().authenticated()
+                )
+
+                // 添加JWT过滤器
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
