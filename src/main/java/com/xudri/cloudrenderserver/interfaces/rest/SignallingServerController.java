@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,16 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/signallingserver")
 @Tag(name = "信令服务器相关接口")
+@RequiredArgsConstructor
 public class SignallingServerController {
 
-    @Resource
-    private SignallingServer signallingServer;
 
-    @Resource
-    private ClientManagerService clientManagerService;
+    private final SignallingServer signallingServer;
+    private final ClientManagerService clientManagerService;
+    private final SystemConfigService systemConfigService;
 
-    @Resource
-    private SystemConfigService systemConfigService;
 
     @RequestMapping(value = "/run", method = RequestMethod.GET)
     public Result<String> run() {
@@ -38,7 +37,7 @@ public class SignallingServerController {
         if (NetUtil.isUsableLocalPort(signallingServerPort)) {
             signallingServer.run();
             return Result.ok("启动成功！");
-        }else {
+        } else {
             return Result.failed("启动失败,端口被占用    ！");
         }
     }

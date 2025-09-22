@@ -7,6 +7,7 @@ import com.xudri.cloudrenderserver.domain.entity.Project;
 import com.xudri.cloudrenderserver.application.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,10 +29,10 @@ import java.io.IOException;
 @RequestMapping("/project")
 @Tag(name = "可视化编辑器工程文件")
 @Transactional
+@RequiredArgsConstructor
 public class RenderProjectController {
 
-    @Autowired
-    private ProjectService projectService;
+    private final ProjectService projectService;
 
     @PostMapping("/upload")
     @Operation(summary = "上传工程文件")
@@ -49,8 +50,8 @@ public class RenderProjectController {
 
     @GetMapping("/list")
     @Operation(summary = "工程列表")
-    public Result listProject(@RequestParam(required = false) String name) {
-        LambdaQueryWrapper<Project> queryWrapper = new LambdaQueryWrapper();
+    public Result<Object> listProject(@RequestParam(required = false) String name) {
+        LambdaQueryWrapper<Project> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.select(Project::getProjectId, Project::getProjectName, Project::getSavePath, Project::getCreateDate);
         queryWrapper.like(StringUtils.isNotBlank(name), Project::getProjectName, name);
         return Result.ok(projectService.list(queryWrapper));
@@ -58,8 +59,8 @@ public class RenderProjectController {
 
     @GetMapping("/remove")
     @Operation(summary = "删除工程")
-    public Result removeProject(@RequestParam("id") String id) {
-        LambdaQueryWrapper<Project> queryWrapper = new LambdaQueryWrapper();
+    public Result<Object> removeProject(@RequestParam("id") String id) {
+        LambdaQueryWrapper<Project> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Project::getProjectId, id);
         return Result.ok(projectService.remove(queryWrapper));
     }

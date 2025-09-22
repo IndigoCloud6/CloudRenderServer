@@ -6,6 +6,7 @@ import com.xudri.cloudrenderserver.domain.entity.Instance;
 import com.xudri.cloudrenderserver.application.service.InstanceService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
@@ -19,12 +20,12 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("instance")
+@RequiredArgsConstructor
 public class InstanceController {
     /**
      * 服务对象
      */
-    @Resource
-    private InstanceService instanceService;
+    private final InstanceService instanceService;
 
     /**
      * 分页查询所有数据

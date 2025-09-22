@@ -6,7 +6,7 @@ import com.xudri.cloudrenderserver.common.exception.Result;
 import com.xudri.cloudrenderserver.domain.entity.SystemConfig;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Tag(name = "系统管理")
 @RequestMapping("/sysconfig")
+@RequiredArgsConstructor
 public class SystemInfoController {
 
-    @Resource
-    private SystemConfigService systemConfigService;
+    private final SystemConfigService systemConfigService;
 
     @GetMapping("getConfig")
     @Operation(summary = "获取配置")
