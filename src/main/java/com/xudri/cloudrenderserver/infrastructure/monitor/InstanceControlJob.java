@@ -1,22 +1,23 @@
 package com.xudri.cloudrenderserver.infrastructure.monitor;
 
 import com.xudri.cloudrenderserver.application.service.InstanceService;
+import com.xudri.cloudrenderserver.application.service.SystemConfigService;
 import com.xudri.cloudrenderserver.common.util.LoggerUtil;
 import com.xudri.cloudrenderserver.core.client.ClientManager;
 import com.xudri.cloudrenderserver.core.streaming.PixelStreamingLauncher;
 import com.xudri.cloudrenderserver.core.streaming.PixelStreamingLauncherManager;
 import com.xudri.cloudrenderserver.domain.entity.Instance;
-import io.netty.channel.Channel;
+import com.xudri.cloudrenderserver.domain.entity.SystemConfig;
 import jakarta.annotation.PreDestroy;
-import jakarta.annotation.Resource;
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import java.nio.file.Paths;
 import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+
+import static com.xudri.cloudrenderserver.infrastructure.monitor.SystemInfoUtil.getFileNameWithoutExtension;
 
 /**
  * @ClassName PixelStreamingInstanceChecker
@@ -26,16 +27,16 @@ import java.util.Optional;
  * @Version 1.0
  */
 @Component
+@AllArgsConstructor
 public class InstanceControlJob {
 
-    @Resource
-    private PixelStreamingLauncherManager pixelStreamingLauncherManager;
+    private final PixelStreamingLauncherManager pixelStreamingLauncherManager;
 
-    @Resource
-    private ClientManager clientManager;
+    private final ClientManager clientManager;
 
-    @Resource
-    private InstanceService instanceService;
+    private final InstanceService instanceService;
+
+    private final SystemConfigService systemConfigService;
 
     @Scheduled(fixedRate = 10000)
     public void check() {
@@ -50,6 +51,8 @@ public class InstanceControlJob {
                     }
                 });
 
+        SystemConfig systemConfig = systemConfigService.getById(1);
+        String processName = getFileNameWithoutExtension(systemConfig.getRenderclientpath());
         // 第二轮循环：检查Streamer状态
         clientManager.getAllStreamers().forEach(streamer -> {
             String insId = streamer.attr(ClientManager.INS_ID).get();
@@ -62,7 +65,7 @@ public class InstanceControlJob {
                     if (instance == null) {
                         LoggerUtil.logBusiness("InstanceControlJob", "Stopping streamer for non-existing instance %s", insId);
                         streamer.close();
-                        ProcessManagerByPowerShell.killProcess("XDTC", insId);
+                        ProcessManagerByPowerShell.killProcess(processName, insId);
                     } else {
                         pixelStreamingLauncherManager.addLauncher(new PixelStreamingLauncher(insId, projectId));
                     }

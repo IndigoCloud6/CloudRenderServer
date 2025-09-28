@@ -15,6 +15,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -81,7 +83,8 @@ public class SystemInfoUtil {
         try {
             ProcessBuilder builder = new ProcessBuilder(
                     nvidiaSmi,
-                    "--query-gpu=index,uuid,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode,temperature.gpu",
+                    "--query-gpu=index,uuid,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active," +
+                            "display_mode,temperature.gpu",
                     "--format=csv,noheader,nounits");
             Process process = builder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -152,6 +155,18 @@ public class SystemInfoUtil {
             return false;
         }
     }
+
+    public static String getFileNameWithoutExtension(String filePath) {
+        Path path = Paths.get(filePath);
+        String fileName = path.getFileName().toString();
+
+        int lastDotIndex = fileName.lastIndexOf('.');
+        if (lastDotIndex > 0) {
+            return fileName.substring(0, lastDotIndex);
+        }
+        return fileName;
+    }
+
 
     public static void main(String[] args) {
         System.out.println(getSystemInfo());
