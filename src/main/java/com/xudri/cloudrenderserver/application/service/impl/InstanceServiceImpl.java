@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.xudri.cloudrenderserver.infrastructure.monitor.SystemInfoUtil.getFileNameWithoutExtension;
+
 /**
  * (Instance)表服务实现类
  *
@@ -169,17 +171,14 @@ public class InstanceServiceImpl extends ServiceImpl<InstanceDao, Instance> impl
     }
 
     private String createSignallingServerURL(String instanceId, String projectId) {
-        return "ws://127.0.0.1:" + signallingServer.getServicePort() +
-                "/type=streamer&insid=" + instanceId + "&projectid=" + projectId;
+        return "\"ws://127.0.0.1:" + signallingServer.getServicePort() +
+                "/type=streamer&insid=" + instanceId + "&projectid=" + projectId + "\"";
     }
 
     private void killProcessesByInstanceId(String id) {
-        JSONArray processList = ProcessManagerByPowerShell.queryProcessListByCmdKeyAndProcessName("XDTC", id);
-        for (int i = 0; i < processList.size(); i++) {
-            JSONObject process = processList.getJSONObject(i);
-            String processId = process.getString("ProcessId");
-            ProcessManagerByPowerShell.killProcessListByPid(processId);
-        }
+        SystemConfig systemConfig = systemConfigService.getById(1);
+        String processName = getFileNameWithoutExtension(systemConfig.getRenderclientpath());
+        ProcessManagerByPowerShell.killProcess(processName, id);
     }
 
     private boolean checkInstanceStatus(String id, boolean shouldBeRunning) throws InterruptedException {

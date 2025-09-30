@@ -5,6 +5,7 @@ import com.xudri.cloudrenderserver.common.util.LoggerUtil;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -70,7 +71,8 @@ public class PixelStreamingLauncher {
 
             // 创建进程构建器
             ProcessBuilder processBuilder = new ProcessBuilder(command);
-
+            processBuilder.redirectOutput(new File("./logs/unreal-out.log"));
+            processBuilder.redirectError(new File("./logs/unreal-err.log"));
             // 启动进程
             process = processBuilder.start();
             this.launchTime = LocalDateTime.now();
