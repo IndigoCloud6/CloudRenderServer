@@ -611,6 +611,10 @@ nvidia-smi --query-gpu=index,name,driver_version --format=csv
 ```java
 // 使用端口范围自动分配
 int freePort = SystemInfoUtil.findFreePortInRange(8000, 9000);
+
+// 创建配置并使用可用端口
+PixelStreamingConfig config = new PixelStreamingConfig("127.0.0.1", freePort);
+config.setRenderOffscreen(true);
 ```
 
 ### 调试模式
