@@ -15,16 +15,28 @@
 
 ### 🚀 核心功能
 - **多实例管理**: 支持同时管理多个虚幻引擎像素流实例
+  - 实例分组管理：按组批量启动、停止、重启实例
+  - 实例生命周期管理：启动、停止、重启、清理等完整生命周期控制
+  - 实例状态监控：实时查看实例运行状态和进程信息
 - **实时通信**: 基于 WebSocket 的低延迟双向通信
 - **智能路由**: 自动匹配客户端与最佳像素流实例
 - **连接管理**: 完善的客户端连接状态监控和管理
 - **进程管理**: 自动化的虚幻引擎进程启动、停止和监控
+- **认证管理**: JWT登录认证
+- **系统监控**: 实时监控系统资源使用情况
+  - CPU 使用率和详细信息
+  - 内存使用情况
+  - GPU 信息采集（支持 NVIDIA GPU 通过 nvidia-smi）
+  - 网络接口和 IP 地址信息
 
 ### 🔧 技术特性
 - **高性能**: 基于 Netty 异步网络框架，支持高并发
 - **可观测性**: 完善的中文日志系统，便于运维监控
 - **配置灵活**: 支持多种像素流配置方案和动态调整
 - **监控完善**: 实时系统资源监控和告警
+  - 使用 OSHI 库进行跨平台系统信息采集
+  - 支持 NVIDIA GPU 监控（nvidia-smi）
+  - 自动端口管理和可用性检测
 
 ## 🛠️ 技术栈
 
@@ -39,6 +51,7 @@
 | Lombok | Latest | 代码简化 |
 | FastJSON2 | 2.0.58 | JSON 处理 |
 | HuTool | 5.8.40 | Java 工具库 |
+| OSHI | Latest | 系统和硬件信息采集 |
 
 ## 📁 项目结构
 
@@ -200,6 +213,58 @@ pixel-streaming:
 - **错误日志**: `logs/error.log` - 记录错误和异常
 - **调试日志**: `logs/debug.log` - 开发调试信息
 
+## 💼 多实例管理示例
+
+### 基本使用
+
+项目提供了完整的多实例管理示例（`MultiInstancePixelStreamingExample.java`），展示如何管理多个像素流实例：
+
+```java
+// 创建实例管理器
+PixelStreamingLauncherManager manager = new PixelStreamingLauncherManager();
+
+// 配置像素流参数
+PixelStreamingConfig config = new PixelStreamingConfig("127.0.0.1", 8890);
+config.setRenderOffscreen(true);  // 后台渲染
+config.setResX(1920);              // 分辨率宽度
+config.setResY(1080);              // 分辨率高度
+
+// 启动实例（支持分组管理）
+String executablePath = "path/to/UnrealEngine.exe";
+manager.launch("instance-1", "group-high-res", executablePath, config);
+manager.launch("instance-2", "group-high-res", executablePath, config);
+```
+
+### 实例控制命令
+
+管理器支持以下控制命令：
+
+| 命令 | 说明 | 示例 |
+|------|------|------|
+| `status` | 查看所有实例状态 | `status` |
+| `status <id>` | 查看指定实例状态 | `status instance-1` |
+| `stop <id>` | 停止指定实例 | `stop instance-1` |
+| `stop-group <groupId>` | 停止指定组的所有实例 | `stop-group group-high-res` |
+| `restart <id>` | 重启指定实例 | `restart instance-1` |
+| `restart-group <groupId>` | 重启指定组的所有实例 | `restart-group group-high-res` |
+| `cleanup` | 清理已停止的实例 | `cleanup` |
+
+### 实例分组管理
+
+支持将实例按组进行批量管理，适用于以下场景：
+
+- **按分辨率分组**: 高分辨率组、标准分辨率组
+- **按用途分组**: 开发测试组、生产环境组
+- **按地域分组**: 不同地区的实例组
+
+```java
+// 批量停止组内所有实例
+int count = manager.stopGroup("group-high-res");
+
+// 批量重启组内所有实例
+int count = manager.restartGroup("group-high-res");
+```
+
 ## 🔌 API 接口
 
 ### 实例管理 API
@@ -245,6 +310,48 @@ GET /system/status
 ```http
 GET /system/info
 ```
+
+**响应示例**:
+
+```json
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "hostName": "render-server-01",
+    "osName": "Windows 10",
+    "ipv4s": ["192.168.1.100"],
+    "cpuInfo": "Intel Core i9-9900K (8 cores, 16 threads)",
+    "cpuUsage": 45.32,
+    "totalMemorySize": 32.0,
+    "usedMemorySize": 16.5,
+    "freeMemorySize": 15.5,
+    "gpuList": [
+      {
+        "deviceId": 0,
+        "uuid": "GPU-xxxxx",
+        "gpuUtil": 0.65,
+        "memTotal": 11.0,
+        "memUsed": 7.2,
+        "memFree": 3.8,
+        "driver": "536.23",
+        "gpuName": "NVIDIA GeForce RTX 3080",
+        "serial": "xxxxx",
+        "displayMode": "Enabled",
+        "displayActive": "Enabled",
+        "temperature": 68.0
+      }
+    ]
+  }
+}
+```
+
+**系统监控特性**:
+- 实时 CPU 使用率监控
+- 内存使用情况统计
+- NVIDIA GPU 信息采集（需要安装 nvidia-smi）
+- 网络接口和 IP 地址信息
+- 跨平台支持（基于 OSHI 库）
 
 ### 信令服务 API
 
@@ -486,6 +593,31 @@ chmod +x /path/to/unreal/engine/executable
 telnet localhost 9999
 ```
 
+#### Q: GPU 信息无法获取
+**A**: 确保已安装 NVIDIA 驱动并配置 nvidia-smi
+```bash
+# Windows: 检查 nvidia-smi 是否可用
+nvidia-smi
+
+# 将 NVIDIA 驱动路径添加到系统环境变量
+# 通常路径为: C:\Program Files\NVIDIA Corporation\NVSMI
+
+# Linux: 安装 NVIDIA 驱动
+sudo apt install nvidia-driver-xxx
+nvidia-smi --query-gpu=index,name,driver_version --format=csv
+```
+
+#### Q: 多实例启动时端口冲突
+**A**: 系统会自动检测可用端口范围
+```java
+// 使用端口范围自动分配
+int freePort = SystemInfoUtil.findFreePortInRange(8000, 9000);
+
+// 创建配置并使用可用端口
+PixelStreamingConfig config = new PixelStreamingConfig("127.0.0.1", freePort);
+config.setRenderOffscreen(true);
+```
+
 ### 调试模式
 
 ```bash
@@ -524,6 +656,20 @@ java -Dlogging.level.com.xudri.cloudrenderserver=DEBUG \
 - `refactor:` 代码重构
 - `test:` 测试相关
 - `chore:` 构建/工具更新
+
+## 🚧 未来功能规划
+
+### 1. 分布式部署
+
+**目标**: 支持Agent模式，多服务器节点的分布式部署架构
+
+### 2. 其他规划功能
+
+- **WebRTC 优化**: 更低延迟的流媒体传输
+- **安全增强**: 端到端加密、访问控制
+- **录制回放**: 支持像素流会话录制和回放
+
+**贡献**: 欢迎社区贡献想法和代码！
 
 ## 📄 许可证
 
