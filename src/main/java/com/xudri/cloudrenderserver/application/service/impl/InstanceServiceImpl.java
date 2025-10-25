@@ -77,8 +77,10 @@ public class InstanceServiceImpl extends ServiceImpl<InstanceDao, Instance> impl
         config.setRenderOffscreen(true);
         config.setForceRes(true);
         config.setUnattended(true);
+        config.setPixelStreamingWebRTCDisableReceiveAudio(true);
+        config.setPixelStreamingWebRTCDisableTransmitAudio(true);
         config.setPixelStreamingEncoderMaxQuality(Integer.valueOf(encoderMaxQP));
-        config.setPixelStreamingWebRTCMaxBitrate(DEFAULT_MAX_BITRATE);
+        config.setPixelStreamingEncoderMaxBitrate(DEFAULT_MAX_BITRATE);
         config.setPixelStreamingWebRTCMaxFps(Integer.valueOf(maxFps));
         return config;
     }
@@ -117,6 +119,8 @@ public class InstanceServiceImpl extends ServiceImpl<InstanceDao, Instance> impl
 
         String signallingServerURL = createSignallingServerURL(id, instance.getProjectid());
         pixelStreamingConfig.setPixelStreamingURL(signallingServerURL);
+        pixelStreamingConfig.setProjectPath(project.getSavePath());
+        pixelStreamingConfig.setPixelStreamingEncoderMultipass("FULL");
 
         pixelStreamingLauncherManager.launch(
                 id,

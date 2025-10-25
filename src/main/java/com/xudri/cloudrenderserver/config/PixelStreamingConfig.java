@@ -17,6 +17,10 @@ import java.util.List;
 public class PixelStreamingConfig {
 
     // 必需的启动参数
+    /**
+     * 工程文件路径
+     */
+    private String projectPath;
 
     /**
      * 指定运行信令和Web服务器的计算机的IP地址或域名
@@ -340,6 +344,10 @@ public class PixelStreamingConfig {
         } else if (pixelStreamingIP != null && pixelStreamingPort != null) {
             args.add("-PixelStreamingIP=" + pixelStreamingIP);
             args.add("-PixelStreamingPort=" + pixelStreamingPort);
+        }
+
+        if (projectPath != null && !projectPath.isEmpty()) {
+            args.add("-projectpath=" + projectPath);
         }
 
         // 虚幻引擎参数 - 只添加与默认值不同的参数
